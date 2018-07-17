@@ -62,7 +62,9 @@ function selectOptions() {
 };
 
 function displayProductByDepartment() {
-    connection.query('SELECT DISTINCT department_id, departments.department_name, overhead_costs, sales, (sales - overhead_costs) AS total_profit FROM departments, products WHERE departments.department_name=products.department_name ORDER BY total_profit DESC', function (err, res) {
+    connection.query('SELECT department_id, departments.department_name, overhead_costs, sum(products.sales) AS sales, (sum(products.sales) - overhead_costs) AS total_profit FROM departments, products WHERE departments.department_name=products.department_name GROUP BY departments.department_id ORDER BY total_profit DESC', function (err, res) {
+
+        
         if (err) throw err;
         var myTable = new Table({
             head: ['department_id', 'department_name', 'overhead_costs', 'sales', 'total_profit'],
